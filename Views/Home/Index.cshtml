@@ -1,0 +1,101 @@
+﻿@using System.Data
+@model DataTable
+
+@{
+    ViewData["Title"] = "Fetching Data from WebAPI";
+}
+
+@if (Model != null && Model.Rows.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>surname</th>
+                <th>photo</th>
+                <th>createdBy</th>
+                <th>date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DataRow row in Model.Rows)
+            {
+                <tr>
+                    <td>@row["id"]</td>
+                    <td>@row["name"]</td>
+                    <td>@row["surname"]</td>
+                    <td>@row["photo"]</td>
+                    <td>@row["createdBy"]</td>
+                    <td>@row["date"]</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+     <div class="text-center">
+    <a href="@Url.Action("Create", "Customer")" class="btn btn-primary">Añadir Cliente</a>
+        <button class="btn btn-danger" id="deleteCustomer">Borrar Cliente</button>
+        <button class="btn btn-warning" id="editCustomer">Modificar Cliente</button>
+         <button class="btn btn-primary" id="searchCustomer">Buscar Cliente</button>
+        <input type="text" id="customerId" placeholder="ID del Cliente">
+    </div>
+}
+else
+{
+    <p>No hay datos disponibles.</p>
+}
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Evento para el botón "Borrar Cliente"
+            $("#deleteCustomer").click(function () {
+                // Obtener el valor del cuadro de texto (ID del cliente)
+                var customerId = $("#customerId").val();
+
+                // Verificar si se ingresó un valor
+                if (customerId.trim() !== "") {
+                    // Aquí puedes enviar una solicitud DELETE a la API
+                    // usando el ID ingresado (customerId).
+                    // Puedes mostrar una confirmación antes de enviar la solicitud.
+
+                    // Ejemplo de solicitud DELETE usando jQuery:
+                    $.ajax({
+                        type: "DELETE",
+                        url: "http://localhost:5107/api/Main/" + customerId, // Reemplaza con la URL correcta de tu API
+                        success: function (data) {
+                            // Manejar la respuesta de la API después de borrar el cliente
+                            // Puedes mostrar un mensaje de éxito o actualizar la vista, si es necesario.
+                            alert("Cliente borrado con éxito.");
+                            location.reload();
+                        },
+                        error: function (error) {
+                            // Manejar errores, por ejemplo, mostrar un mensaje de error.
+                            alert("Error al borrar el cliente: " + error.statusText + customerId);
+                            
+                        }
+                    });
+                } else {
+                    alert("Ingresa un ID de cliente válido.");
+                }
+            });
+
+            // Evento para el botón "Modificar Cliente"
+            $("#editCustomer").click(function () {
+                // Obtener el valor del cuadro de texto (ID del cliente)
+                var customerId = $("#customerId").val();
+
+                // Verificar si se ingresó un valor
+                if (customerId.trim() !== "") {
+                    // Aquí puedes redirigir a una página de edición de cliente
+                    // pasando el ID como parámetro. Por ejemplo:
+                    window.location.href = "/Customer/Edit?id=" + customerId;
+                } else {
+                    alert("Ingresa un ID de cliente válido.");
+                }
+            });
+        });
+    </script>   
+}

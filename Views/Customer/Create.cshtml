@@ -1,0 +1,70 @@
+@model MiProyectoApi.Models.Dto.CustomerCreateDto
+
+@{
+    ViewData["Title"] = "Crear Cliente";
+}
+
+<h1>Crear Cliente</h1>
+
+<form id="createCustomerForm" method="post" action="http://localhost:5107/api/Main"> 
+    <div class="form-group">
+        <label for="Name">Nombre:</label>
+        <input type="text" class="form-control" id="Name" name="Name" required>
+    </div>
+    <div class="form-group">
+        <label for="Surname">Apellido:</label>
+        <input type="text" class="form-control" id="Surname" name="Surname" required>
+    </div>
+    <div class="form-group">
+        <label for="Photo">Foto:</label>
+        <input type="text" class="form-control" id="Photo" name="Photo">
+    </div>
+    <div class="form-group">
+        <label for="CreatedBy">Creado por:</label>
+        <input type="text" class="form-control" id="CreatedBy" name="CreatedBy" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Crear Cliente</button>
+</form>
+
+<a href="/Home/Index" class="btn btn-secondary">Volver a la lista de clientes</a>
+
+@section Scripts {
+    <script>
+        // Manejar la respuesta del formulario
+        document.getElementById("createCustomerForm").addEventListener("submit", function (e) {
+            e.preventDefault(); // Evitar el envío del formulario por defecto
+
+            // Obtener los datos del formulario
+            var formData = {
+                Name: document.getElementById("Name").value,
+                Surname: document.getElementById("Surname").value,
+                Photo: document.getElementById("Photo").value,
+                CreatedBy: document.getElementById("CreatedBy").value
+            };
+
+            // Realizar la solicitud POST al servidor
+            fetch(this.action, {
+                method: this.method,
+                headers: {
+                    "Content-Type": "application/json" // Establecer el tipo de contenido a JSON
+                },
+                body: JSON.stringify(formData) // Convertir los datos a JSON
+            })
+            .then(response => {
+                if (response.ok) {
+                    // La solicitud POST fue exitosa
+                    // Redirigir al usuario a la página Index
+                    console.log("Redirigiendo a la página de inicio");
+                    window.location.href = "http://localhost:5031/Home/Index"; 
+                } else {
+                    // La solicitud POST falló, manejar el error según sea necesario
+                    console.error("Error al enviar el formulario.");
+                    alert("Cliente añadido correctamente")
+                }
+            })
+            .catch(error => {
+                console.error("Error al enviar el formulario:", error);
+            });
+        });
+    </script>
+}
